@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Jatin DevPortfolio">
+  <title>Jatin | DevPortfolio</title>
+
+  <!-- Backplate: dark navy matching the site's .dark-mode background (#1a1a2e) -->
+  <rect width="64" height="64" rx="12" fill="#1a1a2e"/>
+
+  <!-- Left bracket "<" — emerald (#10b981). Together with the slash this reads as the closing-tag delimiter "</" -->
+  <path d="M 14 19 L 6 32 L 14 45"
+        fill="none"
+        stroke="#10b981"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Slash "/" — emerald, same color as the bracket so "</" reads as one syntactic unit -->
+  <path d="M 26 19 L 19 46"
+        fill="none"
+        stroke="#10b981"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- J crossbar + stem + hook — teal (#14b8a6), the gradient midpoint -->
+  <rect x="30" y="18.5" width="13.5" height="4" rx="2" ry="2" fill="#14b8a6"/>
+<path d="M 36.75 21.25 L 36.75 39 Q 36.75 45 31.75 45 Q 27 45 27 38"
+        fill="none"
+        stroke="#14b8a6"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+
+  <!-- Right bracket ">" — mint (#5eead4) -->
+  <path d="M 46 19 L 54 32 L 46 45"
+        fill="none"
+        stroke="#5eead4"
+        stroke-width="4"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+</svg>
