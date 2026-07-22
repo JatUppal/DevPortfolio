@@ -39,7 +39,7 @@ function ResumeTimeline({ orientation = 'vertical' }) {
             variant="light"
             className="liquid-glass-btn"
             size={buttonSize}
-            href="/p176/resume.pdf"
+            href={`${import.meta.env.BASE_URL}resume.pdf`}
             target="_blank"
             download
           >
@@ -49,7 +49,7 @@ function ResumeTimeline({ orientation = 'vertical' }) {
           <Button
             variant="light"
             className="liquid-glass-btn"
-            href="/p176/resume.pdf"
+            href={`${import.meta.env.BASE_URL}resume.pdf`}
             target="_blank"
           >
             View Resume

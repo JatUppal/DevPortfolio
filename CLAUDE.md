@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Tech Stack
 
 - **React 19** — functional components, hooks
-- **Vite** — build tool with HMR; `base: '/p176/'` for GitHub Pages
+- **Vite** — build tool with HMR; `base: '/'` (custom apex domain `jatinuppal.com`)
 - **React Bootstrap 5** — UI component library (Navbar, Card, Badge, Button, Form, ProgressBar, Collapse, OverlayTrigger, Tooltip)
 - **React Router v7** — `HashRouter` for GitHub Pages compatibility (no server-side rewrites)
 - **react-icons** — icon library; sets in use: `fa`, `io5`, `lu`, `si`, `bs`. (Simple Icons removed LinkedIn at LinkedIn's request, hence the `bs` `BsLinkedin` fallback.)
@@ -19,8 +19,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Structure
 
 ```
-p176/
-├── public/                    # Static assets (images, resume PDF) — served at base + path
+jatinuppal/
+├── public/                    # Static assets (images, resume PDF, CNAME) — served at base + path
 ├── src/
 │   ├── assets/                # Build-time assets
 │   ├── components/
@@ -56,7 +56,7 @@ p176/
 │   ├── index.css                 # Base styles
 │   └── main.jsx                  # Entry point
 ├── index.html
-├── vite.config.js                # base: '/p176/'
+├── vite.config.js                # base: '/'
 ├── eslint.config.js              # Flat config, varsIgnorePattern: '^[A-Z_]'
 ├── package.json
 └── README.md
@@ -74,8 +74,8 @@ No test runner configured.
 
 ## Build & Deploy
 
-1. Local dev: `npm run dev`, open `http://localhost:5173/p176/` (base path applies in dev too).
-2. Production: `npm run build`, then `npm run deploy` to publish to the `gh-pages` branch. Live at `https://cs571-s26.github.io/p176/`.
+1. Local dev: `npm run dev`, open `http://localhost:5173/` (base is `/`).
+2. Production: `npm run build`, then `npm run deploy` to publish to the `gh-pages` branch. Live at `https://jatinuppal.com/`. The `public/CNAME` file (`jatinuppal.com`) keeps the GitHub Pages custom-domain setting pinned across deploys.
 3. Push source to `main` separately: `git add . && git commit && git push`.
 4. Smoke test: navigate to `/project/:id`, refresh — `HashRouter` should handle it.
 
@@ -83,9 +83,9 @@ No test runner configured.
 
 Four pieces must stay in sync:
 
-1. **`vite.config.js`** sets `base: '/p176/'` — change if the publish path changes.
+1. **`vite.config.js`** sets `base: '/'` (apex custom domain) — change if the publish path changes.
 2. **`src/App.jsx`** uses `HashRouter` (not `BrowserRouter`) — required for GitHub Pages deep links without server rewrites. Don't swap without solving SPA fallback.
-3. **`src/data/projects.js`** — image paths are stored as `/foo.png` (root-relative). Never hardcode `/p176/`; see "Asset URL gotcha" for the JSX rendering pattern.
+3. **`src/data/projects.js`** — image paths are stored as `/foo.png` (root-relative). Never hardcode the deploy prefix; see "Asset URL gotcha" for the JSX rendering pattern.
 4. **Firebase config** lives in a gitignored `.env.local` at the project root. Required keys (all `VITE_FIREBASE_*`): `API_KEY`, `AUTH_DOMAIN`, `PROJECT_ID`, `STORAGE_BUCKET`, `MESSAGING_SENDER_ID`, `APP_ID`. See `.env.local.example`. Vite reads env files at startup only — restart `npm run dev` after editing. Without these, the app still builds; `firebaseEnabled` is `false` and Firestore-backed features (guestbook + votes) silently degrade.
 
 ## Architecture
@@ -174,7 +174,7 @@ Opt-in CSS classes in `src/App.css` carry the "brand-portfolio" gradient (blue �
 
 ### Asset URL gotcha (Vite + base path)
 
-`vite.config.js` sets `base: '/p176/'`. Vite auto-prefixes the base for static HTML/CSS asset references but **NOT for JS string literals**. So `image: "/og-image.png"` in `projects.js` rendered as `<img src={project.image}>` 404s.
+`vite.config.js` sets `base: '/'`. Vite auto-prefixes the base for static HTML/CSS asset references but **NOT for JS string literals**. The `BASE_URL` pattern below is still required so the codebase can be re-rooted under a subpath again without touching every component.
 
 Pattern for data-driven asset paths in JSX:
 
@@ -182,15 +182,15 @@ Pattern for data-driven asset paths in JSX:
 <img src={`${import.meta.env.BASE_URL}${project.image.replace(/^\//, '')}`} />
 ```
 
-`import.meta.env.BASE_URL` resolves to `/p176/` in dev and prod. The `.replace(/^\//, '')` strips the leading slash. Used in `ProjectCard.jsx` and `TimelineEntry.jsx` popovers; apply the same pattern anywhere else.
+`import.meta.env.BASE_URL` resolves to `/` in dev and prod (matches the apex custom domain). The `.replace(/^\//, '')` strips the leading slash. Used in `ProjectCard.jsx` and `TimelineEntry.jsx` popovers; apply the same pattern anywhere else.
 
 ### State Management
 
-- **Dark mode** — `useState` in `App.jsx`, prop-drilled to `Navbar` and `MeteorShower`. Toggles `.dark-mode` on root wrapper. Persisted to `localStorage['p176:dark-mode']` (string `'true'` / `'false'`); first-time visitors default to dark (any non-`'false'` value, including `null`, is treated as dark).
+- **Dark mode** — `useState` in `App.jsx`, prop-drilled to `Navbar` and `MeteorShower`. Toggles `.dark-mode` on root wrapper. Persisted to `localStorage['jatinuppal:dark-mode']` (string `'true'` / `'false'`); first-time visitors default to dark (any non-`'false'` value, including `null`, is treated as dark).
 - **Project votes** — `useState` in `Home.jsx`, hydrated by an `onSnapshot` subscription to the Firestore `votes` collection (real-time, cross-device). `handleVote` writes via `incrementVote(id)` which calls `setDoc(ref, { count: increment(1) }, { merge: true })` — atomic and creates the doc on first vote. If `firebaseEnabled` is false (env vars missing), votes fall back to in-memory `useState` only. `clickedThisSession` is a separate `Set` used purely to drive the upvote arrow's "jumping" animation.
 - **Filters/search** — `useState` in `Home.jsx` for `selectedTags` (multi-select), `showFilters` (popover open/close), `search`. `FilterPopover` uses Bootstrap `Overlay`+`Popover` with `rootClose` + ESC listener. Search matches `title`, `description`, AND `tags`. Timeline `filter` lives in `ResumeTimeline.jsx` (per-mount, so Home and `/resume` don't share).
 - **Contact form** — `useState` in `ContactForm.jsx` (`form` + `status` idle/sending/success/error). POSTs JSON to Formspree; success clears the form and shows a Bootstrap `Alert`; errors show a mailto fallback.
-- **Guestbook** — `useState` in `Guestbook.jsx`, hydrated by `onSnapshot` on the Firestore `guestbook` collection (ordered by `createdAt desc`). New entries are written via `addGuestbookEntry({ name, message })` which sets `createdAt: serverTimestamp()`. Doc IDs the current browser created are persisted to `localStorage['p176:guestbook-mine']` (a JSON array of IDs); only docs whose ID is in that set get the Trash2 delete button. If `firebaseEnabled` is false, the form is disabled and an inline error renders.
+- **Guestbook** — `useState` in `Guestbook.jsx`, hydrated by `onSnapshot` on the Firestore `guestbook` collection (ordered by `createdAt desc`). New entries are written via `addGuestbookEntry({ name, message })` which sets `createdAt: serverTimestamp()`. Doc IDs the current browser created are persisted to `localStorage['jatinuppal:guestbook-mine']` (a JSON array of IDs); only docs whose ID is in that set get the Trash2 delete button. If `firebaseEnabled` is false, the form is disabled and an inline error renders.
 - **Timeline visibility** — `useState` + `useRef` + `IntersectionObserver` in `TimelineEntry.jsx` toggles `.visible` on viewport entry (threshold 0.2).
 - **Timeline highlights collapse** — `useState` (`highlightsOpen`) + `useState` (`expanded` for `entry.expanded`) in `TimelineEntry.jsx`. `highlightsOpen` drives the `entry.collapseHighlights` Bootstrap `<Collapse>` and its red shiny "See more / See less" toggle. Independent of `expanded` (the Education-coursework toggle).
 - **Active nav section** — `useState` (`activeSection`) + `useState` (`hoveredSection`) in `Navbar.jsx`. `targetSection = hoveredSection ?? activeSection` drives the `.nav-indicator` position (via `useLayoutEffect` measuring the active link's bounding rect). Scroll-spy `IntersectionObserver` on `/` keeps `activeSection` in sync as the user scrolls Home; route changes set it directly via `useEffect`.

@@ -65,7 +65,7 @@ function ScrollManager() {
   return null;
 }
 
-const DARK_MODE_STORAGE_KEY = 'p176:dark-mode';
+const DARK_MODE_STORAGE_KEY = 'jatinuppal:dark-mode';
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {

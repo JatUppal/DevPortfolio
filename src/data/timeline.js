@@ -168,7 +168,7 @@ const timeline = [
     // card has its own max-height + overflow-y).
     collapseHighlights: true,
     // Root-relative path; TimelineEntry prefixes import.meta.env.BASE_URL
-    // before assigning to href so it resolves to /p176/CodePath.jpg in
+    // before assigning to href so it resolves to /CodePath.jpg in
     // both dev and prod (Vite doesn't auto-prefix JS string literals).
     certificateUrl: '/CodePath.jpg',
     description:

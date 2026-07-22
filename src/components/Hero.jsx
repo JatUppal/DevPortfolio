@@ -42,7 +42,7 @@ function Hero() {
         )}
         <div className={`hero-reveal${typingDone ? ' hero-reveal--play' : ''}`}>
           <p className="lead mt-3 hero-subtitle">
-            Software Engineer · Backend & Full Stack · Data Engineer
+            Software Engineer · Backend & Full Stack · AI Engineer
           </p>
           <p className="text-muted mt-2 hero-tagline">
             Building scalable, production-grade systems across cloud, AI, and distributed infrastructure.
@@ -58,7 +58,7 @@ function Hero() {
             <Button
               variant="light"
               className="liquid-glass-btn"
-              href="/p176/resume.pdf"
+              href={`${import.meta.env.BASE_URL}resume.pdf`}
               target="_blank"
             >
               Download Resume

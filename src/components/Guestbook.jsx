@@ -8,7 +8,7 @@ import {
   deleteGuestbookEntry,
 } from '../lib/cloudStore';
 
-const MINE_KEY = 'p176:guestbook-mine';
+const MINE_KEY = 'jatinuppal:guestbook-mine';
 
 function loadMine() {
   try {
