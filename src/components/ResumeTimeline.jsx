@@ -112,11 +112,12 @@ function ResumeTimeline({ orientation = 'vertical' }) {
       ) : (
         <div ref={containerRef} className="timeline-container timeline-container--vertical">
           <div className="timeline-inner-vertical">
-            {entries.map(entry => (
+            {entries.map((entry, i) => (
               <TimelineEntry
                 key={entry.id}
                 entry={entry}
                 orientation="vertical"
+                index={i}
                 rootRef={containerRef}
               />
             ))}

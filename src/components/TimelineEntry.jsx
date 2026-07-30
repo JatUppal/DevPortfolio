@@ -11,7 +11,7 @@ const iconMap = {
   FaFileAlt,
 };
 
-function TimelineEntry({ entry, rootRef, orientation = 'vertical', lane, leftPercent }) {
+function TimelineEntry({ entry, rootRef, orientation = 'vertical', lane, leftPercent, index = 0 }) {
   const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [highlightsOpen, setHighlightsOpen] = useState(false);
@@ -46,11 +46,18 @@ function TimelineEntry({ entry, rootRef, orientation = 'vertical', lane, leftPer
     orientation === 'horizontal' ? ` timeline-entry--horizontal timeline-entry--${lane || 'top'}` : ''
   }${visible ? ' visible' : ''}`;
 
+  // `compactTop` is a negative margin that overlaps this entry with the row
+  // above it. It only makes sense when there IS a row above: applied to the
+  // first rendered entry (e.g. once a filter leaves it alone at the top) it
+  // pulls the card above the scroll container's top edge, where scrollTop
+  // can't reach it. Skip it at index 0.
+  const compactTop = index > 0 ? entry.compactTop : null;
+
   const entryStyle =
     orientation === 'horizontal' && leftPercent != null
       ? { left: `${leftPercent}%` }
-      : orientation === 'vertical' && entry.compactTop
-      ? { marginTop: entry.compactTop }
+      : orientation === 'vertical' && compactTop
+      ? { marginTop: compactTop }
       : undefined;
 
   return (

@@ -1642,9 +1642,20 @@ footer.bg-dark {
   padding: 20px 0;
 }
 
+/* Widened from 1800px so the two Databricks certifications fit on the
+   bottom lane to the right of Prometheon without overlapping it or each
+   other. Card width is fixed in px while positions are percentages, so
+   widening the canvas shrinks each card's share of the timeline and buys
+   slots without moving any card off its date. 3600px is the balance point:
+   each card is 380/3600 ≈ 10.6% of the span, which is wide enough that the
+   UW Madison card plus the two certifications to its right still fit
+   (67.3 + 3 × 10.6 < 100) and narrow enough that the percentage gaps
+   between cards don't translate into huge stretches of empty pixels. If you
+   widen this, every gap grows proportionally; if you narrow it, cards start
+   colliding within a lane. */
 .timeline-horizontal-inner {
   position: relative;
-  min-width: 1800px;
+  min-width: 3600px;
   height: 550px;
 }
 
@@ -1938,8 +1949,10 @@ footer.bg-dark {
     left: 0 !important;
     right: auto !important;
   }
+  /* Kept at the same card-to-canvas ratio as desktop (285/2700 ≈ 10.6%)
+     so lane collisions resolve identically on mobile. */
   .timeline-horizontal-inner {
-    min-width: 1520px;
+    min-width: 2700px;
   }
   .timeline-entry--horizontal {
     width: 285px;

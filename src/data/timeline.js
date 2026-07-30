@@ -25,7 +25,73 @@ const timelineTypes = {
   },
 };
 
+// Array order drives the VERTICAL timeline top-to-bottom (the horizontal mode
+// re-sorts by endYear/endMonth). The two Databricks certifications lead the
+// list as the most recent milestones. Note that inserting an EVEN number of
+// entries here is what kept every following card on its original side of the
+// center line — `.timeline-inner-vertical > .timeline-entry:nth-child(odd|even)`
+// picks the side, so an odd-sized insertion flips all of them.
 const timeline = [
+  {
+    id: 8,
+    type: 'certification',
+    title: 'Databricks Certified Generative AI Engineer Associate',
+    subtitle: 'Databricks · Credential ID 187751720',
+    period: 'Issued Jul 2026 · Valid through Jul 2028',
+    startYear: 2026,
+    startMonth: 7,
+    endYear: 2026,
+    // endMonth set to 5.1 so the card's LEFT EDGE lands at ~81.5% of the
+    // horizontal timeline — entirely to the right of the UW Madison card
+    // (which ends at ~77.9%) and still fully inside the canvas, with its
+    // dot at ~86.8%. Nudged ~6 weeks left of the real Jul 10 2026 issue
+    // date (see `period`) because the whole right-hand group moved left to
+    // close the gap after Prometheon.
+    // Left-edge, not center: `.timeline-entry.visible` overrides the
+    // wrapper's translateX(-50%) with translateY(0) once the fade-in runs,
+    // so the percent is the card's left edge in the settled state.
+    endMonth: 5.1,
+    // Top lane: the bottom lane can't hold both certifications this far
+    // right without them overlapping, so they straddle the line.
+    lane: 'top',
+    collapseHighlights: true,
+    // Root-relative; TimelineEntry prefixes import.meta.env.BASE_URL.
+    certificateUrl: '/Databricks_Gen_AI_Cert_pic.png',
+    description:
+      'Databricks associate-level certification on building production generative AI systems: retrieval-augmented generation, vector search, AI agents, MLflow tracking and deployment, and model evaluation.',
+    highlights: [
+      'RAG pipeline design: chunking, embeddings, and vector search retrieval quality',
+      'AI agents and multi-stage LLM chains, with prompt and context strategies for production use',
+      'MLflow for tracking, packaging, and serving models; evaluation and governance of deployed LLM apps',
+    ],
+  },
+  {
+    id: 7,
+    type: 'certification',
+    title: 'Databricks Certified Data Engineer Associate',
+    subtitle: 'Databricks · Credential ID 186071135',
+    period: 'Issued Jun 2026 · Valid through Jun 2028',
+    startYear: 2026,
+    startMonth: 6,
+    endYear: 2026,
+    // endMonth set to 4.77 so the card's LEFT EDGE lands at 79% — just clear
+    // of the UW Madison card's right edge (~77.9%), with its dot at ~84.3%.
+    // Nudged ~5 weeks left of the real Jun 23 2026 issue date (see `period`)
+    // for the same reason as the Generative AI entry above, which also
+    // explains why the percent is a left edge, not a center.
+    endMonth: 4.77,
+    lane: 'bottom',
+    collapseHighlights: true,
+    // Root-relative; TimelineEntry prefixes import.meta.env.BASE_URL.
+    certificateUrl: '/Databricks_Data_Eng_Associate_Cert.png',
+    description:
+      'Databricks associate-level certification covering the Lakehouse platform end to end: Delta Lake tables, ELT with Spark SQL and PySpark, incremental ingestion, multi-hop pipelines, workflow orchestration, and Unity Catalog data governance.',
+    highlights: [
+      'Delta Lake table management, time travel, and optimization on the Lakehouse architecture',
+      'Batch and incremental ELT with Spark SQL / PySpark, Auto Loader, and Delta Live Tables',
+      'Job orchestration, production pipeline patterns, and Unity Catalog access control',
+    ],
+  },
   {
     id: 1,
     type: 'education',
@@ -36,7 +102,13 @@ const timeline = [
     startYear: 2022,
     startMonth: 8,
     endYear: 2026,
-    endMonth: 5,
+    // endMonth set to 3.25 so the card's LEFT EDGE lands at ~67.3% of the
+    // horizontal timeline, ~315px right of Prometheon's card instead of the
+    // ~1050px void it used to leave. Nudged ~2 months left of the real May
+    // 2026 end date (see `period`) — the cost of closing that gap while
+    // still leaving room for the two certifications to its right, which
+    // need 3 card-widths between here and the 100% mark.
+    endMonth: 3.25,
     lane: 'top',
     description: 'B.S. Computer Science, GPA 3.78.',
     highlights: [
@@ -94,10 +166,13 @@ const timeline = [
     startYear: 2026,
     startMonth: 1,
     endYear: 2026,
-    // endMonth set to 1.26 so Prometheon's card center lands at 52%
-    // of the horizontal timeline. Actual end date is January 2026
-    // (see `period` label on the card).
-    endMonth: 1.26,
+    // endMonth set to 0.74 so Prometheon's card LEFT EDGE lands at 48% of the
+    // horizontal timeline — just right of the "2026" year tick (46.15%), close
+    // to it without the card clipping its label. Its dot then lands at ~53.3%
+    // ≈ late Jan 2026 against the real January 2026 date (see `period`).
+    // Left-edge, not center: `.timeline-entry.visible` overrides the wrapper's
+    // translateX(-50%) with translateY(0) once the fade-in runs.
+    endMonth: 0.74,
     lane: 'bottom',
     description:
       'Multi-tenant chaos engineering platform on Kubernetes with per-tenant sandboxes, Toxiproxy fault injection, and ML-based root cause analysis over an OpenTelemetry + Prometheus + Jaeger observability pipeline.',
